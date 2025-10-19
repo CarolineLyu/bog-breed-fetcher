@@ -5,8 +5,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -15,8 +17,8 @@ import java.util.*;
  * exceptions to align with the requirements of the BreedFetcher interface.
  */
 public class DogApiBreedFetcher implements BreedFetcher {
-    private final OkHttpClient client = new OkHttpClient();
-
+    private static final String API_URL = "https://dog.ceo/api/breed";
+    private static final String LIST = "list";
     /**
      * Fetch the list of sub breeds for the given breed from the dog.ceo API.
      * @param breed the breed to fetch sub breeds for
@@ -25,11 +27,28 @@ public class DogApiBreedFetcher implements BreedFetcher {
      */
     @Override
     public List<String> getSubBreeds(String breed) {
+        final OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        final Request request = new Request.Builder()
+                .url(String.format("%s/%s/%s", API_URL, breed, LIST))
+                .build();
         // TODO Task 1: Complete this method based on its provided documentation
         //      and the documentation for the dog.ceo API. You may find it helpful
         //      to refer to the examples of using OkHttpClient from the last lab,
         //      as well as the code for parsing JSON responses.
         // return statement included so that the starter code can compile and run.
-        return new ArrayList<>();
+        try{
+            final Response response = client.newCall(request).execute();
+            final JSONObject responseBody = new JSONObject(response.body().string());
+            final JSONArray subBreedsArray = responseBody.getJSONArray("message");
+            final String[] subBreeds = new String[subBreedsArray.length()];
+            for (int i = 0; i < subBreedsArray.length(); i++) {
+                subBreeds[i] = subBreedsArray.getString(i);
+            }
+            return List.of(subBreeds);
+        }
+        catch (IOException | JSONException e){
+            throw new BreedNotFoundException(breed);
+        }
     }
 }
