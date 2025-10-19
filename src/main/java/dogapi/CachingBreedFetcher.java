@@ -1,6 +1,5 @@
 package dogapi;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -30,7 +29,7 @@ public class CachingBreedFetcher implements BreedFetcher {
         }
 
         callsMade++;
-        final List<String> subbreeds = helperfetcher.getSubBreeds(breed);
+        final List<String> subbreeds = BreedFetcher.getSubBreeds(breed);
         cache.put(breed, subbreeds);
         // return statement included so that the starter code can compile and run.
         return subbreeds;
