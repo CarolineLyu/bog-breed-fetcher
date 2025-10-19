@@ -21,6 +21,7 @@ public interface BreedFetcher {
     class BreedNotFoundException extends Exception {
         public BreedNotFoundException(String breed) {
             super("Breed not found: " + breed);
+            //finished
         }
     }
 }
