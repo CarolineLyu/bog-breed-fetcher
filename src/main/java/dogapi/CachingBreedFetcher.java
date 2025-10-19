@@ -29,7 +29,7 @@ public class CachingBreedFetcher implements BreedFetcher {
         }
 
         callsMade++;
-        final List<String> subbreeds = BreedFetcher.getSubBreeds(breed);
+        final List<String> subbreeds = helperfetcher.getSubBreeds(breed);
         cache.put(breed, subbreeds);
         // return statement included so that the starter code can compile and run.
         return subbreeds;
